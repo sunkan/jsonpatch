@@ -57,8 +57,9 @@ class JsonAccessor
 
     public function set($pointerArray, &$array, $value)
     {
-        while (list(, $val) = each($pointerArray)) {
-            if (is_array($array[$val])) {
+        $depth = count($pointerArray);
+        while (list($key, $val) = each($pointerArray)) {
+            if (is_array($array[$val]) && $depth !== ($key + 1)) {
                 $nextArray = &$array[$val];
                 $this->set($pointerArray, $nextArray, $value);
                 break;
@@ -80,14 +81,15 @@ class JsonAccessor
      */
     public function insert($pointerArray, &$array, $value)
     {
-        while (list(, $val) = each($pointerArray)) {
-            if (isset($array[$val]) && is_array($array[$val]) && !(preg_match('/^\d+$/', $val) && $this->parser->destinationIsLocationInArray())) {
+        $depth = count($pointerArray);
+        while (list($key, $val) = each($pointerArray)) {
+            if (isset($array[$val]) && is_array($array[$val]) && $depth !== ($key + 1)) {
                 $nextArray = &$array[$val];
                 $this->insert($pointerArray, $nextArray, $value);
                 break;
             } else {
                 if ($this->parser->destinationIsLocationInArray()) {
-                    if (is_array($value)) {
+                    if (is_array($value) || is_object($value)) {
                         $value = [$value];
                     }
                     array_splice($array, $val, 0, $value);
@@ -100,8 +102,9 @@ class JsonAccessor
 
     public function remove($pointerArray, &$array)
     {
-        while (list(, $val) = each($pointerArray)) {
-            if (isset($array[$val]) && is_array($array[$val]) && !(preg_match('/^\d+$/', $val) && $this->parser->destinationIsLocationInArray())) {
+        $depth = count($pointerArray);
+        while (list($key, $val) = each($pointerArray)) {
+            if (isset($array[$val]) && is_array($array[$val]) && $depth !== ($key + 1)) {
                 $nextArray = &$array[$val];
                 $this->remove($pointerArray, $nextArray);
                 break;
