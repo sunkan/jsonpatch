@@ -65,9 +65,7 @@ class JsonAccessor
             } else {
                 $array[$val] = $value;
             }
-
         }
-
     }
 
     /**
@@ -89,6 +87,9 @@ class JsonAccessor
                 break;
             } else {
                 if ($this->parser->destinationIsLocationInArray()) {
+                    if (is_array($value)) {
+                        $value = [$value];
+                    }
                     array_splice($array, $val, 0, $value);
                 } else {
                     $array[$val] = $value;
@@ -110,10 +111,7 @@ class JsonAccessor
                 } else {
                     unset($array[$val]);
                 }
-
             }
-
         }
-
     }
 }
