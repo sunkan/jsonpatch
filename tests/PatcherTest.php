@@ -33,6 +33,14 @@ class PatcherTest extends TestCase
 
         $result = $patcher->patch($targetJSON, $patchOperations);
         $this->assertEquals($expected, $result);
+
+        $targetJSON = '{ "foo": [ {"_id":"bar"}, {"_id":"baz"} ] }';
+        $patchOperations = '[
+             { "op": "add", "path": "/foo/1", "value": {"_id":"qux"} }
+           ]';
+        $expected = '{"foo":[{"_id":"bar"},{"_id":"qux"},{"_id":"baz"}]}';
+        $result = $patcher->patch($targetJSON, $patchOperations);
+        $this->assertEquals($expected, $result);
     }
 
     public function testReplaceOperation()
@@ -62,6 +70,14 @@ class PatcherTest extends TestCase
            ]';
         $expected = '{"foo":{"bar":"baz","waldo":"boo"},"qux":{"corge":"grault"}}';
 
+        $result = $patcher->patch($targetJSON, $patchOperations);
+        $this->assertEquals($expected, $result);
+
+        $targetJSON = '{ "foo": [ {"_id":"bar"}, {"_id":"baz"} ] }';
+        $patchOperations = '[
+             { "op": "replace", "path": "/foo/1", "value": {"_id":"qux"} }
+           ]';
+        $expected = '{"foo":[{"_id":"bar"},{"_id":"qux"}]}';
         $result = $patcher->patch($targetJSON, $patchOperations);
         $this->assertEquals($expected, $result);
     }
