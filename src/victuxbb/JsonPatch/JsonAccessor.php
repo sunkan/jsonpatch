@@ -65,7 +65,9 @@ class JsonAccessor
             } else {
                 $array[$val] = $value;
             }
+
         }
+
     }
 
     /**
@@ -81,7 +83,7 @@ class JsonAccessor
     public function insert($pointerArray, &$array, $value)
     {
         while (list(, $val) = each($pointerArray)) {
-            if (isset($array[$val]) && is_array($array[$val])) {
+            if (isset($array[$val]) && is_array($array[$val]) && !(preg_match('/^\d+$/', $val) && $this->parser->destinationIsLocationInArray())) {
                 $nextArray = &$array[$val];
                 $this->insert($pointerArray, $nextArray, $value);
                 break;
@@ -98,7 +100,7 @@ class JsonAccessor
     public function remove($pointerArray, &$array)
     {
         while (list(, $val) = each($pointerArray)) {
-            if (isset($array[$val]) && is_array($array[$val])) {
+            if (isset($array[$val]) && is_array($array[$val]) && !(preg_match('/^\d+$/', $val) && $this->parser->destinationIsLocationInArray())) {
                 $nextArray = &$array[$val];
                 $this->remove($pointerArray, $nextArray);
                 break;
@@ -108,7 +110,10 @@ class JsonAccessor
                 } else {
                     unset($array[$val]);
                 }
+
             }
+
         }
+
     }
 }
