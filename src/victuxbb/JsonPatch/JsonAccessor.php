@@ -8,10 +8,9 @@
 
 namespace victuxbb\JsonPatch;
 
-
 class JsonAccessor
 {
-    
+
     /**
      * constructor
      *
@@ -53,26 +52,22 @@ class JsonAccessor
      * @param mixed  $value   value to set
      *
      * @throws Exception\SyntaxError
-     * @throws Exception\NoneExistentValue     
+     * @throws Exception\NoneExistentValue
      */
-    
-        
+
     public function set($pointerArray, &$array, $value)
-    {       
-        while (list(,$val) = each($pointerArray)) {            
-            if(is_array($array[$val])){
-                $nextArray = &$array[$val];                                
-                $this->set($pointerArray,$nextArray, $value);
+    {
+        while (list(, $val) = each($pointerArray)) {
+            if (is_array($array[$val])) {
+                $nextArray = &$array[$val];
+                $this->set($pointerArray, $nextArray, $value);
                 break;
-            }else{
+            } else {
                 $array[$val] = $value;
-            } 
-            
+            }
         }
-        
     }
-    
-    
+
     /**
      * set pointed value in the location of an array
      *
@@ -81,45 +76,39 @@ class JsonAccessor
      * @param mixed  $value   value to set
      *
      * @throws Exception\SyntaxError
-     * @throws Exception\NoneExistentValue     
+     * @throws Exception\NoneExistentValue
      */
     public function insert($pointerArray, &$array, $value)
-    {   
-        while (list(, $val) = each($pointerArray)) {            
-            if(isset($array[$val]) && is_array($array[$val])){        
-                $nextArray = &$array[$val];        
-                $this->insert($pointerArray,$nextArray, $value);
+    {
+        while (list(, $val) = each($pointerArray)) {
+            if (isset($array[$val]) && is_array($array[$val])) {
+                $nextArray = &$array[$val];
+                $this->insert($pointerArray, $nextArray, $value);
                 break;
-            }else{                
-                if($this->parser->destinationIsLocationInArray()){
-                    array_splice($array,$val,0,$value);
-                }else{                    
-                    $array[$val] = $value;                
+            } else {
+                if ($this->parser->destinationIsLocationInArray()) {
+                    array_splice($array, $val, 0, $value);
+                } else {
+                    $array[$val] = $value;
                 }
-                
-            } 
-            
+            }
         }
-
     }
 
     public function remove($pointerArray, &$array)
     {
-        while (list(, $val) = each($pointerArray)) {            
-            if(isset($array[$val]) && is_array($array[$val])){        
-                $nextArray = &$array[$val];        
-                $this->remove($pointerArray,$nextArray);
+        while (list(, $val) = each($pointerArray)) {
+            if (isset($array[$val]) && is_array($array[$val])) {
+                $nextArray = &$array[$val];
+                $this->remove($pointerArray, $nextArray);
                 break;
-            }else{                
-                if($this->parser->destinationIsLocationInArray()){                                       
-                    array_splice($array,$val,1);
-                }else{     
-                   unset($array[$val]);           
+            } else {
+                if ($this->parser->destinationIsLocationInArray()) {
+                    array_splice($array, $val, 1);
+                } else {
+                    unset($array[$val]);
                 }
-                
-            } 
-            
+            }
         }
-        
     }
 }

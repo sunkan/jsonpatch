@@ -2,31 +2,27 @@
 
 namespace victuxbb\JsonPatch;
 
-
 use victuxbb\JsonPatch\PatchOperations;
 
-class Patcher {
+class Patcher
+{
 
     public function __construct()
     {
-
     }
 
-    public function patch($jsonTargetObject,$jsonOperations)
+    public function patch($jsonTargetObject, $jsonOperations)
     {
-        $operations = json_decode($jsonOperations);         
-        $object = json_decode($jsonTargetObject,true);
-        
+        $operations = json_decode($jsonOperations);
+        $object = json_decode($jsonTargetObject, true);
+
         foreach ($operations as $operation) {
-            
-            $method_call = $operation->op;   
-            $patchOperation = new PatchOperations($object,$operation);
-            $reflectionMethod = new \ReflectionMethod('victuxbb\JsonPatch\PatchOperations',$method_call);
-            $reflectionMethod->invoke($patchOperation,$operation);
-        }           
-        
+            $method_call = $operation->op;
+            $patchOperation = new PatchOperations($object, $operation);
+            $reflectionMethod = new \ReflectionMethod('victuxbb\JsonPatch\PatchOperations', $method_call);
+            $reflectionMethod->invoke($patchOperation, $operation);
+        }
 
         return json_encode($object);
-
     }
 }

@@ -10,7 +10,6 @@ namespace victuxbb\JsonPatch;
 
 use victuxbb\JsonPatch\Exception\SyntaxError;
 
-
 class JsonPointerParser implements JsonPointerParserInterface
 {
     /**
@@ -30,25 +29,24 @@ class JsonPointerParser implements JsonPointerParserInterface
      */
     private $isIndex = array();
 
-    public function __construct($pointer,$arrayTarget)
+    public function __construct($pointer, $arrayTarget)
     {
         $this->elements = $this->parse($pointer);
-        foreach($this->elements as $element){
-            if(isset($arrayTarget[$element])) {
+        foreach ($this->elements as $element) {
+            if (isset($arrayTarget[$element])) {
                 $value = $arrayTarget[$element];
                 if (is_array($value)) {
                     $this->isIndex[] = true;
                 } else {
                     $this->isIndex[] = false;
                 }
-            }else{
+            } else {
                 $this->isIndex[] = false;
             }
-
         }
-        $this->length = count($this->elements);        
+        $this->length = count($this->elements);
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -65,7 +63,7 @@ class JsonPointerParser implements JsonPointerParserInterface
         $pointerArray = array_map(function ($referenceToken) {
             return preg_replace_callback('/~./', function ($matches) {
                 $escaped = $matches[0];
-                
+
                 switch ($escaped) {
                     case '~0':
                         return '~';
@@ -78,7 +76,6 @@ class JsonPointerParser implements JsonPointerParserInterface
                         throw new SyntaxError(sprintf('unknown escape sequence "%s" detected.', $escaped));
                         break;
                 }
-                
             }, $referenceToken);
         }, explode('/', $pointer));
 
@@ -86,28 +83,27 @@ class JsonPointerParser implements JsonPointerParserInterface
 
         return $pointerArray;
     }
-    
-    
+
     /*
      * An element to add to an existing array - whereupon the supplied
      * value is added to the array at the indicated location.
      */
     public function destinationIsLocationInArray()
-    {        
-        if($this->length > 1){
-            $lastElement = $this->elements[$this->length-1];
-            if(is_numeric($lastElement) && $this->isIndex[$this->length-2]){
+    {
+        if ($this->length > 1) {
+            $lastElement = $this->elements[$this->length - 1];
+            if (is_numeric($lastElement) && $this->isIndex[$this->length - 2]) {
                 return true;
             }
         }
         return false;
     }
-    
+
     public function getElements()
     {
         return $this->elements;
     }
-    
+
     public function getLength()
     {
         return $this->length;

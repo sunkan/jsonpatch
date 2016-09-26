@@ -2,9 +2,8 @@
 
 namespace victuxbb\JsonPatch;
 
-interface PatchOperationsInterface {
-
-	
+interface PatchOperationsInterface
+{
     public function add($operation);
     public function remove($operation);
     public function replace($operation);

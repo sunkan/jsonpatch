@@ -2,11 +2,8 @@
 
 namespace victuxbb\JsonPatch\Model;
 
-
-
-class Operation{
-
-
+class Operation
+{
     private $op;
 
     private $path;
@@ -15,13 +12,13 @@ class Operation{
 
     private $from;
 
-    public function __construct($op,$path,$value){
+    public function __construct($op, $path, $value)
+    {
 
         $this->op = $op;
         $this->path = $path;
         $this->value = $value;
-
-    }	
+    }
 
     public function getOp()
     {
@@ -36,7 +33,7 @@ class Operation{
     public function getValue()
     {
         return $this->value;
-    }   
+    }
 
     public function getFrom()
     {
